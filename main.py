@@ -30,20 +30,23 @@ enemy_x_change = []
 enemy_y_change = []
 num_of_enemies = 6
 
+
+enemy_bullet_img = pygame.image.load("./images/bullet.png")
+enemy_bullet_x = []
+enemy_bullet_y = []
+enemy_bullet_y_change = 0.5
+enemy_bullet_state = "ready"
+
+
 for i in range(num_of_enemies):
     enemy_img.append(pygame.image.load("./images/enemy.png"))
     enemy_x.append(random.randint(0, 735))
     enemy_y.append(random.randint(50, 150))
+    enemy_bullet_x.append(enemy_x[i])
+    enemy_bullet_y.append(enemy_y[i] + 20)
     enemy_x_change.append(0.3)
     enemy_y_change.append(40)
 
-
-enemy_bullet_img = pygame.image.load("./images/bullet.png")
-enemy_bullet_x = 0
-enemy_bullet_y = 480
-enemy_bullet_x_change = 0
-enemy_bullet_y_change = 2
-enemy_bullet_state = "ready"
 
 score = 0
 font = pygame.font.Font("freesansbold.ttf", 30)
@@ -82,11 +85,18 @@ def enemy_fire_bullet(x, y):
     enemy_bullet_state = "fire"
     screen.blit(enemy_bullet_img, (x, y+10))
 
+
 def enemy_shooting():
+    # removing the commets make the enemies shoot with you
+
+    #global enemy_bullet_state
     for i in range(num_of_enemies):
-            enemy_bullet_y = enemy_y[i]
-            enemy_fire_bullet(enemy_x[i], enemy_y[i])
-            enemy_bullet_y += enemy_bullet_y_change
+        enemy_fire_bullet(enemy_x[i], enemy_bullet_y[i])
+        enemy_bullet_y[i] += enemy_bullet_y_change
+        if enemy_bullet_y[i] > 700:
+            enemy_bullet_y[i] = enemy_y[i] + 20
+    #enemy_bullet_state = "ready"
+
 
 def is_collision(enemy_x, enemy_y, bullet_x, bullet_y):
     distance = math.sqrt(math.pow(enemy_x - bullet_x, 2) +
@@ -145,7 +155,6 @@ while running:
         if collison:
             bullet_y = 480
             bullet_state = "ready"
-            enemy_bullet_state = "ready"
             score += 1
             enemy_x[i] = random.randint(0, 735)
             enemy_y[i] = random.randint(50, 150)
@@ -154,7 +163,11 @@ while running:
     if bullet_y <= 0:
         bullet_y = 480
         bullet_state = "ready"
-        enemy_bullet_state = "ready"
+
+    # set limit to all the bullets
+    # for i in range(num_of_enemies):
+    #    if enemy_bullet_y[i] >= 600:
+   #         enemy_bullet_y.append(enemy_y[i] + 20)
 
     if bullet_state == "fire":
         fire_bullet(bullet_x, bullet_y)
