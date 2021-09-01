@@ -31,7 +31,7 @@ enemy_y_change = []
 num_of_enemies = 6
 
 
-enemy_bullet_img = pygame.image.load("./images/bullet.png")
+enemy_bullet_img = pygame.image.load("./images/enemy-bullet.png")
 enemy_bullet_x = []
 enemy_bullet_y = []
 enemy_bullet_y_change = 0.5
