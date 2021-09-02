@@ -86,6 +86,15 @@ def enemy_fire_bullet(x, y):
     screen.blit(enemy_bullet_img, (x, y+10))
 
 
+def is_collision(target_x, target_y, target_bullet_x, target_bullet_y):
+    distance = math.sqrt(math.pow(target_x - target_bullet_x, 2) +
+                         math.pow(target_y - target_bullet_y, 2))
+    if distance < 20:
+        return True
+    else:
+        return False
+
+
 def enemy_shooting():
     # removing the commets make the enemies shoot with you
 
@@ -95,16 +104,11 @@ def enemy_shooting():
         enemy_bullet_y[i] += enemy_bullet_y_change
         if enemy_bullet_y[i] > 700:
             enemy_bullet_y[i] = enemy_y[i] + 20
-    #enemy_bullet_state = "ready"
-
-
-def is_collision(enemy_x, enemy_y, bullet_x, bullet_y):
-    distance = math.sqrt(math.pow(enemy_x - bullet_x, 2) +
-                         math.pow(enemy_y - bullet_y, 2))
-    if distance < 20:
-        return True
-    else:
-        return False
+            #to-do: enemy collision
+        if is_collision(player_x, player_y, enemy_bullet_x[i], enemy_bullet_y[i]):
+            game_over_text()
+            break
+  #enemy_bullet_state = "ready"
 
 
 running = True
@@ -151,8 +155,8 @@ while running:
             enemy_x_change[i] = -0.3
             enemy_y[i] += enemy_y_change[i]
 
-        collison = is_collision(enemy_x[i], enemy_y[i], bullet_x, bullet_y)
-        if collison:
+        collision = is_collision(enemy_x[i], enemy_y[i], bullet_x, bullet_y)
+        if collision:
             bullet_y = 480
             bullet_state = "ready"
             score += 1
@@ -163,11 +167,6 @@ while running:
     if bullet_y <= 0:
         bullet_y = 480
         bullet_state = "ready"
-
-    # set limit to all the bullets
-    # for i in range(num_of_enemies):
-    #    if enemy_bullet_y[i] >= 600:
-   #         enemy_bullet_y.append(enemy_y[i] + 20)
 
     if bullet_state == "fire":
         fire_bullet(bullet_x, bullet_y)
